@@ -14,6 +14,10 @@ create_initial_gen <- function(count, init_means = 0, init_sd = 1) {
 }
 
 # check fitness
+check_fitness <- Vectorize(function(w, x, y, z) {
+	
+	objective_function(w, x, y, z)
+})
 
 
 # have babies
