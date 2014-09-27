@@ -15,7 +15,7 @@ bar$init(length = iterations, title = 'Generations')
 
 for(i in 1:iterations) {
 	
-	generation <- next_generation(generation, 15, 15)
+	generation <- next_generation(generation, 15, 15, baby_sd = 2)
 	bar$inc()
 }
 bar$close()

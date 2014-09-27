@@ -57,10 +57,11 @@ get_survivors <- function(generation, expected_deaths = 1) {
 # next gen ####
 next_generation <- function(generation, 
 							expected_babies = 1,
-							expected_deaths = 1) {
+							expected_deaths = 1,
+							baby_sd = 1) {
 	
 	generation[, error:=check_fitness(w,x,y,z)]
-	babies <- make_babies(generation, expected_babies)
+	babies <- make_babies(generation, expected_babies, baby_sd)
 	survivors <- get_survivors(generation, expected_deaths)
 	
 	rbindlist(list(babies[,list(w,x,y,z)], survivors[,list(w,x,y,z)]))
