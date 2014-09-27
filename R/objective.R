@@ -8,5 +8,5 @@ objective_function <- function(w, x, y, z) {
 		# y == 0, but breaks if negative
 		# z == 1, exponential
 	
-	abs(w - 30) + abs(2 * x) + abs(suppressWarnings(sqrt(y))) + abs(10^z - 10)
+	abs(w - 30) + abs(2 * x) + abs(suppressWarnings(sqrt(abs(y - 4)))) + abs(10^z - 10)
 }
