@@ -21,27 +21,15 @@ check_fitness <- Vectorize(function(w, x, y, z) {
 
 
 # have babies ####
-make_babies <- function(generation, expected_babies = 1) {
+make_babies <- function(generation, expected_babies = 5, baby_sd = 1) {
 		
-	parents <- get_parents(generation, expected_babies = 1)
+	parents <- get_parents(generation, expected_babies = expected_babies)
 	
-	# you are literally the worst. data.table this
-	data.table(t(sapply(1:nrow(parents), function(row_num) {
-		make_baby(data.frame(parents)[row_num,])
-	})))
-}
-
-make_baby <- function(row, baby_sd = 1) {
-
-	w <- row[,'w']
-	x <- row[,'x']
-	y <- row[,'y']
-	z <- row[,'z']
-		
-	data.table(w = ifelse(runif(1) < .25, rnorm(1, mean=w, sd=baby_sd), w),
-			   x = ifelse(runif(1) < .25, rnorm(1, mean=x, sd=baby_sd), x),
-			   y = ifelse(runif(1) < .25, rnorm(1, mean=y, sd=baby_sd), y),
-			   z = ifelse(runif(1) < .25, rnorm(1, mean=z, sd=baby_sd), z))
+	parents[,w:=ifelse(runif(length(w)) < .25, rnorm(1, mean=w, sd=baby_sd), w)]
+	parents[,x:=ifelse(runif(length(x)) < .25, rnorm(1, mean=x, sd=baby_sd), x)]
+	parents[,y:=ifelse(runif(length(y)) < .25, rnorm(1, mean=y, sd=baby_sd), y)]
+	parents[,z:=ifelse(runif(length(z)) < .25, rnorm(1, mean=z, sd=baby_sd), z)]
+	parents
 }
 
 get_parents <- function(generation, expected_babies = 1) {
@@ -64,5 +52,17 @@ get_survivors <- function(generation, expected_deaths = 1) {
 	generation[,death_odds:=expected_deaths * error/sum(error, na.rm=T)]
 	
 	generation[death_odds < runif(length(death_odds)),]
+}
+
+# next gen ####
+next_generation <- function(generation, 
+							expected_babies = 1,
+							expected_deaths = 1) {
+	
+	generation[, error:=check_fitness(w,x,y,z)]
+	babies <- make_babies(generation, expected_babies)
+	survivors <- get_survivors(generation, expected_deaths)
+	
+	rbindlist(list(babies[,list(w,x,y,z)], survivors[,list(w,x,y,z)]))
 }
 
