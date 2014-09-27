@@ -1,4 +1,5 @@
 
+source('../R/objective.R')
 source('../R/algorithm.R')
 context('Algorithm')
 
@@ -10,14 +11,35 @@ test_that('Initial gen works', {
 	expect_equal(nrow(result), 10)	
 })
 
-test_that('Checking fitness', {
+test_that('Checking error', {
 	
 	generation <- data.table(w = c(1, 2, 3),
 							 x = c(1, NaN, 3),
 							 y = c(1, 2, 3),
 							 z = c(1, 2, 3))
 	
-	generation[,fitness:=check_fitness(w,x,y,z)]
+	generation[, error:=check_fitness(w,x,y,z)]
 	
-	expect_is(generation$fitness, 'numeric')
+	expect_is(generation$error, 'numeric')
 })
+
+test_that('Check baby odds', {
+	
+	odds <- calc_baby_odds(c(1:10, NaN), 1)
+	
+	expect_equal(sum(odds, na.rm = T), 1)
+})
+
+test_that('Get parents', {
+	
+	generation <- data.table(w = c(1, 2, 3),
+							 x = c(1, NaN, 3),
+							 y = c(1, 2, 3),
+							 z = c(1, 2, 3),
+							 errors = c(1, NaN, 1000))
+	
+	result <- get_parents(generation, 1)
+	
+	expect_is(result, 'data.table')
+})
+

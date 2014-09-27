@@ -21,6 +21,23 @@ check_fitness <- Vectorize(function(w, x, y, z) {
 
 
 # have babies
+make_babies <- function(generation, expected_babies = 1) {
+		
+	parents <- get_parents(generation, expected_babies = 1)
+}
 
+get_parents <- function(generation, expected_babies = 1) {
+
+	generation$baby_odds <- calc_baby_odds(generation$errors, expected_babies)
+	
+	generation[baby_odds > runif(length(baby_odds)),]
+}
+
+calc_baby_odds <- function(errors, expected_babies = 1) {
+	
+	raw <- expected_babies * (1 - errors / sum(errors, na.rm = T))
+	adjustment <- (length(errors[!is.nan(errors)]) - 1)
+	raw / adjustment
+}
 
 # die
