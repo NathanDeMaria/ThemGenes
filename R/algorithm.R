@@ -26,18 +26,18 @@ make_babies <- function(generation, expected_babies = 1) {
 	parents <- get_parents(generation, expected_babies = 1)
 	
 	# you are literally the worst. data.table this
-	data.table(t(sapply(1:nrow(generation), function(row_num) {
-		make_baby(data.frame(generation)[row_num,])
+	data.table(t(sapply(1:nrow(parents), function(row_num) {
+		make_baby(data.frame(parents)[row_num,])
 	})))
 }
 
 make_baby <- function(row, baby_sd = 1) {
-	
+
 	w <- row[,'w']
 	x <- row[,'x']
 	y <- row[,'y']
 	z <- row[,'z']
-	
+		
 	data.table(w = ifelse(runif(1) < .25, rnorm(1, mean=w, sd=baby_sd), w),
 			   x = ifelse(runif(1) < .25, rnorm(1, mean=x, sd=baby_sd), x),
 			   y = ifelse(runif(1) < .25, rnorm(1, mean=y, sd=baby_sd), y),
@@ -59,3 +59,10 @@ calc_baby_odds <- function(errors, expected_babies = 1) {
 }
 
 # die ####
+get_survivors <- function(generation, expected_deaths = 1) {
+	
+	generation[,death_odds:=expected_deaths * error/sum(error, na.rm=T)]
+	
+	generation[death_odds < runif(length(death_odds)),]
+}
+

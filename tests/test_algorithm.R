@@ -53,7 +53,21 @@ test_that('Make babies', {
 	
 	babies <- make_babies(generation)
 	
-	expect_equal(nrow(babies), nrow(generation))
 	expect_is(babies, 'data.table')
 })
+
+
+test_that('Some die', {
+	
+	generation <- data.table(w = c(1, 2, 7),
+							 x = c(9, 3, 3),
+							 y = c(3, NaN, 2),
+							 z = c(2, 8, 5),
+							 error = c(1, NaN, 1000))
+	
+	survivors <- get_survivors(generation)
+	
+	expect_is(survivors, 'data.table')
+})
+
 
