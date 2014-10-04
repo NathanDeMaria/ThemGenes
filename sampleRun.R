@@ -21,5 +21,6 @@ for(i in 1:iterations) {
 }
 bar$close()
 
+library(ggplot2)
 g <- ggplot(errors[error < 145]) + geom_point(aes(generation, error))
 plot(g)
