@@ -3,6 +3,9 @@ source('R/algorithm.R')
 source('R/objective.R')
 source('Helpers/progressBar.R')
 
+library(ggvis)
+library(shiny)
+
 set.seed(18)
 generation <- create_initial_gen(50)
 
